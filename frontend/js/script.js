@@ -4,13 +4,28 @@ let sec = 0;
 let year = 0;
 let month = 0;
 let day = 0;
+window.onload = function() {
+  let tim = new Date();
+  year = tim.getFullYear(); month = tim.getMonth()+1; day = tim.getDate();
+  hour = tim.getHours(); min = tim.getMinutes(); sec = tim.getSeconds();
+  setInterval(() => {
+    if(++sec == 60) {
+      sec = 0;
+      min++;
+    }
+    document.querySelector(".sec").innerText = sec;
+    document.querySelector(".min").innerText = min;
+    document.querySelector(".hour").innerText = hour;
+    document.querySelector(".year").innerText = year+"년";
+    document.querySelector(".month").innerText = month+"월";
+    document.querySelector(".day").innerText = day+"일";
+  }, 1000);
+}
 
-var i;
 
-setTimeout(bitweather, 50); // 웹 브라우저 실행후 0.05 초 뒤에 예보 초기화 함수 실행 주소//역삼동
+setTimeout(weather, 50); // 웹 브라우저 실행후 0.05 초 뒤에 예보 초기화 함수 실행 주소
 // 0.05초의 단격을 둔 이유는 (당일, 현재시간) 을 호출하는 onload 함수가 실행될 여유시간이 조금 이나마 필요하다.
-
-function bitweather() {
+function weather() { // 현재 역삼동 지역 예보
 
   // hour = 23; // 24시가 넘어가서 일과 시간이 초기화 되면서 오류가 발생하여 임시로 입력함
   // day = 16;
@@ -31,13 +46,15 @@ function bitweather() {
     sendhour = "08";
   }else if(hour > 5) {
     sendhour = "05";
+  }else if(hour <= 5) {
+    day = day - 1;
+    sendhour = 23;
   }
-
   // xhr.open("GET", "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=y3igO1ZwlipiZaS1ao6Jc3pQiq8yXTrYxfzw6lsZkpMUE1h6ui86SK2Gnfu5P8MvD5ssg3pqXanFI18DuvmhBQ%3D%3D&pageNo=1&numOfRows=12&dataType=JSON&base_date=202212" + day + "&base_time=" + sendhour + "00&nx=61&ny=125", false) // nodejs 없이 웹 브라우저에서 요청하는경우
   xhr.open("GET", "http://192.168.0.6:3000/weather?day=" + day + "&hour=" + sendhour, false)
   
   xhr.send();
-  i = JSON.parse(xhr.responseText); // 기상 정보 JSON 타입 저장 변수
+  let i = JSON.parse(xhr.responseText); // 기상 정보 JSON 타입 저장 변수
   let tmp = 0; // 기온
   let reh = 0; // 습도
   let wsd = 0; // 풍속
@@ -84,28 +101,58 @@ function bitweather() {
 
 }
 
+
+
+
 function citylink(str) {
   return "https://api.openweathermap.org/data/2.5/weather?q="+str+"&units=&lang=kr&appid=2c950305dea1fd4ac37dd8631643ba9d"
+  // openweathermap 오픈 API 를 활용하여 세계 각지역의 당일 기상정보 확인
 }
 
+function reflash(str) { // 검색 지역 예보
 
-function bgreflash(str) {
-  var imgxhr = new XMLHttpRequest();
-  imgxhr.open("GET", "http://192.168.0.6:3000/naver?url=" + str, false);
-  imgxhr.send();
-  let i = JSON.parse(imgxhr.responseText);
-  f = i;
-  console.log(i.items[0].link)
-  document.querySelector(".base").style.backgroundImage = "url(" + i.items[0].link +")"
-}
+  document.querySelector(".middleline").style = "display: ;"
+  document.querySelector(".max-tem").style = "display: ;"
+  document.querySelector(".min-tem").style = "display: ;"
+  document.querySelector(".speed").style = "display: none;"
 
-function reflash(str) {
   let xhr = new XMLHttpRequest();
-  xhr.setRequestHeader
+
   xhr.open("GET", citylink(str), false);
 
   xhr.send();
   let jsoncity = JSON.parse(xhr.responseText);
+  let ifw = jsoncity.weather[0].icon;
+  
+  if(ifw == "01d") {
+    document.querySelector(".image").src = "frontend/img/sun.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/sunny.jpg);"
+  }else if(ifw == "02d") {
+    document.querySelector(".image").src = "frontend/img/sun.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/sunny.jpg);"
+  }else if(ifw == "03d") {
+    document.querySelector(".image").src = "frontend/img/cloudy.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/cloudy.jpg);"
+  }else if(ifw == "04d") {
+    document.querySelector(".image").src = "frontend/img/clouds.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/cloudy2.jpg);"
+  }else if(ifw == "09d") {
+    document.querySelector(".image").src = "frontend/img/rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/rain.jpg);"
+  }else if(ifw == "10d") {
+    document.querySelector(".image").src = "frontend/img/rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/rain.jpg);"
+  }else if(ifw == "11d") {
+    document.querySelector(".image").src = "frontend/img/rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/rain.jpg);"
+  }else if(ifw == "13d") {
+    document.querySelector(".image").src = "frontend/img/snow.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/snow.jpg);"
+  }else if(ifw == "50d") {
+    document.querySelector(".image").src = "frontend/img/clouds.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/mist.jpg);"
+  }
+
   document.querySelector(".temp-num").innerText = Math.floor(jsoncity.main.temp-274)+"°"
   document.querySelector(".max-tem").innerText = Math.floor(jsoncity.main.temp_max-274)+"°"
   document.querySelector(".min-tem").innerText = Math.floor(jsoncity.main.temp_min-274)+"°"
@@ -122,20 +169,20 @@ document.querySelector(".city-text").addEventListener("keypress", function(e) {
 })
 
 
-window.onload = function() {
-  let tim = new Date();
-  year = tim.getFullYear(); month = tim.getMonth()+1; day = tim.getDate();
-  hour = tim.getHours(); min = tim.getMinutes(); sec = tim.getSeconds();
-  setInterval(() => {
-    if(++sec == 60) {
-      sec = 0;
-      min++;
-    }
-    document.querySelector(".sec").innerText = sec;
-    document.querySelector(".min").innerText = min;
-    document.querySelector(".hour").innerText = hour;
-    document.querySelector(".year").innerText = year+"년";
-    document.querySelector(".month").innerText = month+"월";
-    document.querySelector(".day").innerText = day+"일";
-  }, 1000);
+
+
+
+
+
+
+
+
+function bgreflash(str) {
+  var imgxhr = new XMLHttpRequest();
+  imgxhr.open("GET", "http://192.168.0.6:3000/naver?url=" + str, false);
+  imgxhr.send();
+  let i = JSON.parse(imgxhr.responseText);
+  f = i;
+  console.log(i.items[0].link)
+  document.querySelector(".base").style.backgroundImage = "url(" + i.items[0].link +")"
 }
