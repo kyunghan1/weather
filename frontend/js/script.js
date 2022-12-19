@@ -60,26 +60,26 @@ function bitweather() {
   document.querySelector(".subdo .subdo-per").innerText = reh+"%";
   document.querySelector(".speed").innerText = "풍속 : " + wsd + "m/s";
   if(pty == 0 && sky == 1) { // 구름 없음 맑음
-    document.querySelector(".image").src = "./img/sun.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/sunny.jpg);"
+    document.querySelector(".image").src = "frontend/img/sun.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/sunny.jpg);"
   }else if(pty == 0 && sky == 3) { // 구름 많음 
-    document.querySelector(".image").src = "./img/cloudy.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/cloudy.jpg);"
+    document.querySelector(".image").src = "frontend/img/cloudy.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/cloudy.jpg);"
   }else if(pty == 0 && sky == 4) { // 흐림 
-    document.querySelector(".image").src = "./img/clouds.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/cloudy2.jpg);"
+    document.querySelector(".image").src = "frontend/img/clouds.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/cloudy2.jpg);"
   }else if(pty == 1) { // 비 옴
-    document.querySelector(".image").src = "./img/rain.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/rain.jpg);"
+    document.querySelector(".image").src = "frontend/img/rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/rain.jpg);"
   }else if(pty == 2) { // 비 / 눈
-    document.querySelector(".image").src = "./img/snow&rain.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/snow&rain.jpg);"
+    document.querySelector(".image").src = "frontend/img/snow&rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/snow&rain.jpg);"
   }else if(pty == 3) { // 눈
-    document.querySelector(".image").src = "./img/snow.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/snow.jpg);"
+    document.querySelector(".image").src = "frontend/img/snow.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/snow.jpg);"
   }else if(pty == 4) { // 소나기 == 비
-    document.querySelector(".image").src = "./img/rain.gif"
-    document.querySelector(".base").style = "background-image: url(./img/bg/rain.jpg);"
+    document.querySelector(".image").src = "frontend/img/rain.gif"
+    document.querySelector(".base").style = "background-image: url(frontend/img/bg/rain.jpg);"
   }
 
 }
